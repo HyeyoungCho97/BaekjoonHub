@@ -1,9 +1,10 @@
+import java.util.stream.*;
 import java.util.*;
 class Solution {
     public String solution(String[] arr) {
-        StringBuilder sb = new StringBuilder();
-        for(String s: arr) sb.append(s);
+//         StringBuilder sb = new StringBuilder();
+//         for(String s: arr) sb.append(s);
         
-        return sb.toString();
+        return Arrays.stream(arr).collect(Collectors.joining());
     }
 }
