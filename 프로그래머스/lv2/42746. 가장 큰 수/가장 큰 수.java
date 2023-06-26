@@ -1,19 +1,14 @@
 import java.util.*;
 class Solution {
     public String solution(int[] numbers) {
-        //String 배열로 바꾸기
-        String[] strArray = new String[numbers.length];
-        for(int i=0;i<numbers.length; i++){
-            strArray[i] = numbers[i]+"";
-        }
         
-        Arrays.sort(strArray, (s1, s2) -> (s2+s1).compareTo(s1+s2));
+        String[] sNum = new String[numbers.length];
+        int idx=0;
+        //String 변환
+        for(int i: numbers) sNum[idx++]= i+"";
         
-        StringBuilder sb = new StringBuilder();
-        for(String s: strArray) sb.append(s);
-        String answer =sb.toString();
-        
-        if(answer.startsWith("0")) return "0";
-        return answer;
+        Arrays.sort(sNum, (s1, s2)-> {return Integer.parseInt(s2+s1) - Integer.parseInt(s1+s2);});
+        if("0".equals(sNum[0])) return "0";
+        else return String.join("",sNum);
     }
 }
