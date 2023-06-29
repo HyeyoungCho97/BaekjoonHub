@@ -1,0 +1,7 @@
+-- 코드를 입력하세요
+SELECT  pt_name, pt_no, gend_cd, age, IFNULL(tlno, 'NONE')
+FROM    patient
+WHERE   age<= 12
+    AND gend_cd LIKE 'W'
+ORDER BY age DESC, pt_name ASC
+    
