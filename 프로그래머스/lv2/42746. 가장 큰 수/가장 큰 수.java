@@ -1,14 +1,23 @@
 import java.util.*;
 class Solution {
     public String solution(int[] numbers) {
+        String answer = "";
+        String[] sNums = new String[numbers.length];
         
-        String[] sNum = new String[numbers.length];
-        int idx=0;
-        //String 변환
-        for(int i: numbers) sNum[idx++]= i+"";
+        for(int i=0; i<sNums.length; i++){
+            sNums[i] = numbers[i]+"";
+        }
         
-        Arrays.sort(sNum, (s1, s2)-> {return Integer.parseInt(s2+s1) - Integer.parseInt(s1+s2);});
-        if("0".equals(sNum[0])) return "0";
-        else return String.join("",sNum);
+        Arrays.sort(sNums, (a, b)-> {
+            return (b+a).compareTo(a+b);
+        });
+        
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i<sNums.length; i++){
+            if ("0".equals(sNums[0])) return "0";
+            sb.append(sNums[i]);
+        }
+        
+        return sb.toString();
     }
 }
