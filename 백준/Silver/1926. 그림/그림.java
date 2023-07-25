@@ -1,13 +1,22 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
 public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		
+		//[그림의 개수, 가장 넓은 그림의 넓이]
+		int[] answer= new int[2];
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
+		
+		int n= Integer.parseInt(st.nextToken());
+		int m= Integer.parseInt(st.nextToken());
 		
 		int[][] paper = new int[n][m];
 		
@@ -15,68 +24,64 @@ public class Main {
 		for(int i=0; i<n; i++) {
 			st = new StringTokenizer(br.readLine());
 			for(int j=0; j<m; j++) {
-				paper[i][j] = Integer.parseInt(st.nextToken());
+				paper[i][j]=Integer.parseInt(st.nextToken());
 			}
 		}
 		
-		//BFS 시작
-		int[] dx = {1, 0, -1, 0};
-		int[] dy = {0, 1, 0, -1};
-		Queue<Dot> queue = new LinkedList<>();
+		//BFS
 		boolean[][] isVisit = new boolean[n][m];
-		int max=0;
-		int count=0;
+		
+		int[] dx = {0, 0, 1, -1};
+		int[] dy = {1, -1, 0, 0};
+		
+		Queue<Loc> q = new LinkedList<>();
+		
+		//모든 그림을 확인
 		for(int i=0; i<n; i++) {
 			for(int j=0; j<m; j++) {
-				int paint=0;
-				//방문하지 않았고, 색칠되어있으면 queue에 offer
-				if(isVisit[i][j] == false && paper[i][j]==1) {
-					//System.out.println(i+" "+j);
-					//방문표시 & 큐에 넣음
+				//그림이 그려져 있고 && 아직 방문 전이면 queue에 offer
+				if(paper[i][j]==1 && !isVisit[i][j]) {
+					//System.out.println("start: ("+i+","+j+")");
 					isVisit[i][j]=true;
-					queue.offer(new Dot(i, j));
-					paint += 1;
-					count++;
+					q.offer(new Loc(i,j));
+					answer[0]++;
 				}
-				
-				//근처 노드 모두 확인
-				while(!queue.isEmpty()) {
-					Dot curr = queue.poll();
-					//System.out.println("Out "+curr.x+" "+curr.y);
+				//그림 탐색
+				int paint=0;
+				while(!q.isEmpty()) {
+					
+					Loc now = q.poll();
+					paint++;
+					
+					//4방향 확인
 					for(int d=0; d<4; d++) {
-						int nx = curr.x+dx[d];
-						int ny = curr.y+dy[d];
-						if(nx<0 || nx>= n || ny <0 || ny>=m) continue;
-						if(isVisit[nx][ny]==true) continue;
-						//색칠된 부분 queue에 넣기
-						if(isVisit[nx][ny] == false && paper[nx][ny]==1) {
-							//System.out.println("in "+nx+" "+ny);
-							isVisit[nx][ny] = true;
-							queue.offer(new Dot(nx, ny));
-							paint += 1;
-						}
+						int nextX = now.x+dx[d];
+						int nextY = now.y+dy[d];
 						
+						if(nextX<0 || nextY<0 || nextX>=n || nextY>=m)	continue;
+						if(isVisit[nextX][nextY])	continue;
+						if(paper[nextX][nextY]==0)	continue;
 						
+						isVisit[nextX][nextY]= true;
+						q.offer(new Loc(nextX, nextY));
 					}
 				}
-				//max값 갱신
-				if(max<paint) max=paint;
-				
+				//System.out.println(paint);
+				answer[1] = (paint > answer[1])? paint: answer[1];
 			}
 		}
-		System.out.println(count);
-		System.out.println(max);
 		
-		
+		System.out.println(answer[0]);
+		System.out.println(answer[1]);
 	}
-
 }
-class Dot{
+
+class Loc {
 	int x;
 	int y;
 	
-	Dot(int x, int y) {
-		this.x= x;
-		this.y= y;
+	Loc(int x, int y){
+		this.x = x;
+		this.y = y;
 	}
 }
