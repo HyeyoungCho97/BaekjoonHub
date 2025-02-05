@@ -2,13 +2,7 @@ def solution(arr, queries):
     answer = []
     
     for s, e, k in queries:
-        temp = max(arr)+1
-        for i in arr[s:e+1] :
-            if i > k and temp > i:
-                temp = i
-                
-        if temp == max(arr)+1:
-            answer.append(-1)
-        else :
-            answer.append(temp)  
+        temp = [i for i in arr[s:e+1] if i > k]
+        answer.append( -1 if len(temp)==0 else min(temp) )
+
     return answer
